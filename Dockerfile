@@ -20,9 +20,6 @@ RUN apt-get update && \
             python-renderpm \
             python-support
 
-# 8.0 specific depenencies:
-RUN apt-get install -y python-unittest2
-
 RUN adduser --system --quiet --shell=/bin/bash --home=/opt/odoo --group odoo
 
 RUN mkdir -p /mnt/odoo-source && chown odoo /mnt/odoo-source && \
