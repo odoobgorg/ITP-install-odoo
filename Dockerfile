@@ -29,14 +29,14 @@ RUN mkdir -p /mnt/odoo-source && chown odoo /mnt/odoo-source && \
     mkdir -p /mnt/backups && chown odoo /mnt/backups && \
     mkdir -p /mnt/logs && chown odoo /mnt/logs
 
-ENV ODOO_BRANCH=9.0 \
+ENV ODOO_BRANCH=10.0 \
     OPENERP_SERVER=/mnt/config/odoo-server.conf \
     ODOO_SOURCE_DIR=/mnt/odoo-source \
     ADDONS_DIR=/mnt/addons \
     BACKUPS_DIR=/mnt/backups \
     LOGS_DIR=/mnt/logs \
     ODOO_DATA_DIR=/mnt/data-dir \
-    BUILD_DATE=2016_08_05
+    BUILD_DATE=2016_10_20
 
 # Make a separate layer for odoo source, because it's too heavy
 RUN git clone --depth=1 -b ${ODOO_BRANCH} https://github.com/odoo/odoo.git /mnt/odoo-source && \
@@ -79,4 +79,4 @@ VOLUME ["/mnt/data-dir", \
 # we don't add /mnt/odoo-source and /mnt/addons in order to allow modify theirs content in inherited dockers
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["/mnt/odoo-source/openerp-server"]
+CMD ["/mnt/odoo-source/odoo-bin"]

@@ -47,7 +47,7 @@
  export ODOO_DOMAIN=${ODOO_DOMAIN:-odoo.example.com}
  export ODOO_DATABASE=${ODOO_DATABASE:-odoo.example.com}
  export ODOO_USER=${ODOO_USER:-odoo}
- export ODOO_BRANCH=${ODOO_BRANCH:-9.0}
+ export ODOO_BRANCH=${ODOO_BRANCH:-10.0}
  export ODOO_MASTER_PASS=${ODOO_MASTER_PASS:-`< /dev/urandom tr -dc A-Za-z0-9 | head -c${1:-12};echo;`}
 
  ## Nginx
@@ -285,7 +285,7 @@
 
  if [[ "$CLONE_IT_PROJECTS_LLC" == "yes" ]]
  then
-     REPOS=( "${REPOS[@]}" "https://github.com/iledarn/e-commerce.git iledarn/e-commerce")
+     REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/e-commerce.git it-projects-llc/e-commerce")
      REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/pos-addons.git it-projects-llc/pos-addons")
      REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/access-addons.git it-projects-llc/access-addons")
      REPOS=( "${REPOS[@]}" "https://github.com/it-projects-llc/website-addons.git it-projects-llc/website-addons")
@@ -303,7 +303,7 @@
  do
      eval "git clone --depth=1 -b ${ODOO_BRANCH} $r" || echo "Cannot clone: git clone -b ${ODOO_BRANCH} $r"
  done
- chown -R ${ODOO_USER}:${ODOO_USER} $ADDONS_DIR
+ chown -R ${ODOO_USER}:${ODOO_USER} $ADDONS_DIR || true
 
 
  #from http://stackoverflow.com/questions/2914220/bash-templating-how-to-build-configuration-files-from-templates-with-bash
@@ -339,7 +339,7 @@
      #  -> pos/
      #  -> ...
      ADDONS_PATH=`ls -d1 $ADDONS_DIR/*/* | tr '\n' ','`
-     ADDONS_PATH=`echo $ODOO_SOURCE_DIR/openerp/addons,$ODOO_SOURCE_DIR/addons,$ADDONS_PATH | sed "s,//,/,g" | sed "s,/,\\\\\/,g" `
+     ADDONS_PATH=`echo $ODOO_SOURCE_DIR/odoo/addons,$ODOO_SOURCE_DIR/addons,$ADDONS_PATH | sed "s,//,/,g" | sed "s,/,\\\\\/,g" `
      sed -ibak "s/addons_path.*/addons_path = $ADDONS_PATH/" $OPENERP_SERVER
 
  fi
@@ -409,7 +409,8 @@
  #### Odoo Saas Tool
  if [[ "$INIT_SAAS_TOOLS" != "no" ]]        ###################################### IF
  then
-     sudo su - ${ODOO_USER} -s /bin/bash -c  "python $ADDONS_DIR/it-projects-llc/odoo-saas-tools/saas.py $INIT_SAAS_TOOLS"
+     apt-get install -y sudo
+     sudo -E su --preserve-environment - ${ODOO_USER} -s /bin/bash -c  "python $ADDONS_DIR/it-projects-llc/odoo-saas-tools/saas.py $INIT_SAAS_TOOLS"
  fi
 
  #### START CONTROL
